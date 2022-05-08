@@ -99,6 +99,7 @@ const handleNoteDelete = (e) => {
 // Sets the activeNote and displays it
 const handleNoteView = (e) => {
   e.preventDefault();
+
   activeNote = JSON.parse(e.target.parentElement.getAttribute('data-note'));
   renderActiveNote();
 };
@@ -147,6 +148,7 @@ const renderNoteList = async (notes) => {
         'text-danger',
         'delete-note'
       );
+      // delBtnEl.textContent = 'del'; ***********************************************************
       delBtnEl.addEventListener('click', handleNoteDelete);
 
       liEl.append(delBtnEl);

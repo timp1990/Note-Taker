@@ -1,6 +1,6 @@
 const notesRouter = require('express').Router();
 const { v4: uuidv4 } = require('uuid');
-const { readAndAppend, readFromFile } = require('../helpers/fsUtils');
+const { readAndAppend, readFromFile, writeToFile } = require('../helpers/fsUtils');
 
 const notesDatabasePath = './db/db.json'
 
@@ -21,7 +21,7 @@ notesRouter.post('/', (req, res) => {
     const newNote = {
       title,
       text,
-      note_id: uuidv4(),
+      id: uuidv4(),
     };
     // Write the new note to the file db.json
     readAndAppend(newNote, './db/db.json');
@@ -35,6 +35,16 @@ notesRouter.post('/', (req, res) => {
   } else {
     res.json('Error in posting note');
   }
+})
+
+notesRouter.delete('/:id', (req, res) => {
+  const noteForDeletingID = req.params.id.toLowerCase();
+  readFromFile(notesDatabasePath).then((data) => {
+    const thisData = JSON.parse(data)
+    // Filter db list
+    const forWritingData = thisData.filter(item => item.id !== noteForDeletingID)
+    writeToFile(notesDatabasePath, forWritingData)
+  })
 })
 
 module.exports = notesRouter;
